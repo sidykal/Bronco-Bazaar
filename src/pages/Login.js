@@ -10,6 +10,8 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      
+      console.log("User object:", user);
 
       if (user.email.endsWith("@scu.edu")) {
         console.log("Authorized user:", user.email);

@@ -10,7 +10,7 @@ export default function Navbar() {
         <span style={logoTextStyle}>SCU Bronco Bazaar</span>
       </div>
       <div>
-        <Link to="/" style={linkStyle}>Home</Link>
+        <Link to="/home" style={linkStyle}>Home</Link>
         <Link to="/create" style={linkStyle}>Create Offer</Link>
         <Link to="/message" style={linkStyle}>Messages</Link>
         <Link to="/message" style={linkStyle}>Wishlist</Link>
