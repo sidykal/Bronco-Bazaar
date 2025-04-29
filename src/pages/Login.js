@@ -10,7 +10,7 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
+
       console.log("User object:", user);
 
       if (user.email.endsWith("@scu.edu")) {
@@ -29,8 +29,24 @@ function Login() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1>Login</h1>
-      <button onClick={handleLogin}>Sign in with Google</button>
+      <h1 style={{ fontSize: "3rem", marginBottom: "40px" }}>Bronco Bazaar</h1>
+      <button
+        onClick={handleLogin}
+        style={{
+          padding: "12px 24px",
+          fontSize: "16px",
+          backgroundColor: "#9E1B32", // Pantone 201 red
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+          transition: "background-color 0.3s",
+        }}
+        onMouseEnter={(e) => (e.target.style.backgroundColor = "#7A1528")}
+        onMouseLeave={(e) => (e.target.style.backgroundColor = "#9E1B32")}
+      >
+        Sign in with Google
+      </button>
     </div>
   );
 }

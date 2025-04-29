@@ -1,7 +1,6 @@
 // firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCLUo0Vm-Hc1kA3E1_Oku2pL5GKyY2VeOA",
@@ -17,11 +16,10 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-const db = getFirestore(app);
 
 // (Optional) Hint to use university email
 provider.setCustomParameters({
   hd: "scu.edu" // replace with your university domain
 });
 
-export { auth, provider, db };
+export { auth, provider };
