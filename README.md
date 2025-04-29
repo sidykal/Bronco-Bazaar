@@ -1,6 +1,7 @@
 # Run instructions from sid
 
 Call 'npm install' or 'yarn install' whenver you pull
+Also make sure to do 'npm install firebase' if fire base doesnt work
 
 # Getting Started with Create React App
 
