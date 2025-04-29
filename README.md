@@ -1,3 +1,7 @@
+# Run instructions from sid
+
+Call 'npm install' or 'yarn install' whenver you pull
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
