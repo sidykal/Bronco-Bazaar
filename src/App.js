@@ -1,4 +1,3 @@
-// main script that ties all elements together
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -9,11 +8,14 @@ import Create from './pages/Create';
 import Profile from './pages/Profile';
 import Message from './pages/Message';
 import Login from './pages/Login'; // new Login page
+import Wishlist from './pages/Wishlist'; // import Wishlist page
 
 function App() {
   const [items, setItems] = useState(() => {
     return JSON.parse(localStorage.getItem('marketItems')) || [];
   });
+
+  const [wishlist, setWishlist] = useState([]);
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // loading while checking auth
@@ -36,8 +38,19 @@ function App() {
     setItems(updatedItems);
   };
 
+  const addToWishlist = (item) => {
+    if (!wishlist.includes(item)) {
+      setWishlist([...wishlist, item]);
+    }
+  };
+
+  const removeFromWishlist = (item) => {
+    const updatedWishlist = wishlist.filter((i) => i !== item);
+    setWishlist(updatedWishlist);
+  };
+
   if (loading) {
-    return <div>Loading...</div>; // optional: add a spinner
+    return <div>Loading...</div>;
   }
 
   return (
@@ -48,7 +61,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route 
             path="/home" 
-            element={user ? <Home items={items} onDelete={deleteItem} /> : <Navigate to="/" />} 
+            element={user ? <Home items={items} onDelete={deleteItem} onWishlist={addToWishlist} /> : <Navigate to="/" />} 
           />
           <Route 
             path="/create" 
@@ -61,6 +74,10 @@ function App() {
           <Route 
             path="/profile" 
             element={user ? <Profile /> : <Navigate to="/" />} 
+          />
+          <Route 
+            path="/wishlist" 
+            element={user ? <Wishlist wishlist={wishlist} onRemove={removeFromWishlist} /> : <Navigate to="/" />} 
           />
         </Routes>
       </div>
