@@ -1,11 +1,20 @@
-//script for listing items for sale on main page
-import React from 'react';
+import React, { useState } from 'react';
 
+export default function ItemList({ items, onDelete, onWishlist }) {
+  // Track wishlist status for each item
+  const [wishlistStatus, setWishlistStatus] = useState(
+    items.reduce((status, item) => {
+      status[item.name] = false; // Default to not in wishlist
+      return status;
+    }, {})
+  );
 
-//function for adding posts to page
-//lists the items available with the given structure and elements
-//make offer button currently does nothing (this is button to send msg to poster)
-export default function ItemList({ items, onDelete }) {
+  const handleWishlistClick = (item) => {
+    const updatedStatus = { ...wishlistStatus, [item.name]: !wishlistStatus[item.name] };
+    setWishlistStatus(updatedStatus);
+    onWishlist(item); // Call onWishlist to add to global wishlist
+  };
+
   if (items.length === 0) return <p>There are no offers at this time.</p>;
 
   return (
@@ -17,17 +26,21 @@ export default function ItemList({ items, onDelete }) {
           <button onClick={() => onDelete(index)} style={deleteStyle}>
             Delete
           </button>
-          <button style={offerStyle}>
-            Make Offer
+          <button style={offerStyle}>Make Offer</button>
+
+          
+          <button
+            onClick={() => handleWishlistClick(item)}
+            style={wishlistStatus[item.name] ? { ...wishlistButtonStyle, backgroundColor: '#4CAF50' } : wishlistButtonStyle}
+          >
+            {wishlistStatus[item.name] ? 'Wishlisted!' : 'Add to Wishlist'}
           </button>
         </li>
       ))}
     </ul>
   );
 }
-// make offer button currently does nothing
 
-//css styling for elements
 const listStyle = {
   padding: 0,
   listStyleType: 'none',
@@ -38,7 +51,7 @@ const itemStyle = {
   border: '1px solid black',
   borderRadius: '8px',
   padding: '1rem',
-  marginBottom: '1rem'
+  marginBottom: '1rem',
 };
 
 const descriptionStyle = {
@@ -56,11 +69,19 @@ const deleteStyle = {
 };
 
 const offerStyle = {
-    background: 'green',
-    color: 'white',
-    border: 'none',
-    padding: '0.5rem 1rem',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    //margin: '0.25rem'
+  background: 'green',
+  color: 'white',
+  border: 'none',
+  padding: '0.5rem 1rem',
+  borderRadius: '4px',
+};
+
+const wishlistButtonStyle = {
+  background: '#f0ad4e',
+  color: 'white',
+  border: 'none',
+  padding: '0.5rem 1rem',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  margin: '0.25rem',
 };
