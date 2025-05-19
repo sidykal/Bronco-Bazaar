@@ -1,13 +1,13 @@
 //script for the navbar at top of webpage
 //wishlist currently redirects to message page since that component hasnt been added yet
-/*import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   return (
     <nav style={navStyle}>
       <div>
-        <span style={logoTextStyle}>SCU Bronco Bazaar</span>
+        <span style={logoTextStyle}>Bronco Bazaar</span>
       </div>
       <div>
         <Link to="/home" style={linkStyle}>Home</Link>
@@ -26,7 +26,7 @@ const navStyle = {
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '1rem',
-  background: '#333',
+  background: '#283618',
   color: 'white',
 };
 
@@ -40,9 +40,9 @@ const linkStyle = {
   marginLeft: '1rem',
   color: 'white',
   textDecoration: 'none',
-};*/
+};
 
-import React, { useState } from 'react';
+/*import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
@@ -55,7 +55,7 @@ export default function Navbar() {
   return (
     <div style={{ position: 'relative' }}>
       <nav style={navStyle}>
-        <span style={logoTextStyle}>SCU Bronco Bazaar</span>
+        <span style={logoTextStyle}>Bronco Bazaar</span>
 
         <div
           style={hamburgerContainer}
@@ -92,7 +92,7 @@ const navStyle = {
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '1rem',
-  background: '#333',
+  background: '#283618',
   color: 'white',
   zIndex: 2,
   position: 'relative',
@@ -139,3 +139,4 @@ const overlayLinkStyle = {
   margin: '1rem 0',
   textDecoration: 'none',
 };
+*/

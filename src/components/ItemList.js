@@ -23,6 +23,7 @@ export default function ItemList({ items, onDelete, onWishlist }) {
         <li key={index} style={itemStyle}>
           <strong>{item.name}</strong> – ${item.price}
           <p style={descriptionStyle}>{item.description}</p>
+          
           <button onClick={() => onDelete(index)} style={deleteStyle}>
             Delete
           </button>
@@ -42,24 +43,41 @@ export default function ItemList({ items, onDelete, onWishlist }) {
 }
 
 const listStyle = {
-  padding: 0,
+  /*padding: 0,
   listStyleType: 'none',
+  //3 per row
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',  // 3 equal columns
+  gap: '1rem',                            // space between items
+  */
+  columnCount: 3,
+  columnGap: '1rem',
+  padding: '1rem',
 };
 
 const itemStyle = {
-  background: '#edebe7',
-  border: '1px solid black',
+  //background: '#edebe7',
+  background: '#283618',
+  //border: '1px solid black',
   borderRadius: '8px',
   padding: '1rem',
   marginBottom: '1rem',
+  color: 'white',
+  breakInside: 'avoid',
+  wordWrap: 'break-word',       
+  overflowWrap: 'break-word',   
+  maxWidth: '100%',             
+  boxSizing: 'border-box',
 };
 
 const descriptionStyle = {
   margin: '0.5rem 0',
+  color: 'white',
 };
 
 const deleteStyle = {
-  background: 'red',
+  //background: 'red',
+  background: '#bc6c25',
   color: 'white',
   border: 'none',
   padding: '0.5rem 1rem',
@@ -69,7 +87,8 @@ const deleteStyle = {
 };
 
 const offerStyle = {
-  background: 'green',
+  //background: 'green',
+  background: '#606c38',
   color: 'white',
   border: 'none',
   padding: '0.5rem 1rem',
@@ -77,7 +96,8 @@ const offerStyle = {
 };
 
 const wishlistButtonStyle = {
-  background: '#f0ad4e',
+  //background: '#f0ad4e',
+  background: '#dda15e',
   color: 'white',
   border: 'none',
   padding: '0.5rem 1rem',
