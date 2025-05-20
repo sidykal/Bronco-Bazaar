@@ -15,7 +15,13 @@ export default function ItemList({ items, onDelete, onWishlist }) {
     onWishlist(item); // Call onWishlist to add to global wishlist
   };
 
-  if (items.length === 0) return <p>There are no offers at this time.</p>;
+  if (items.length === 0)
+  return (
+    <div style={noItemsContainerStyle}>
+      <p style={noItemsTextStyle}>There are no offers at this time.</p>
+    </div>
+  );
+
 
   return (
     <ul style={listStyle}>
@@ -104,4 +110,23 @@ const wishlistButtonStyle = {
   borderRadius: '4px',
   cursor: 'pointer',
   margin: '0.25rem',
+};
+
+const noItemsContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '80px',
+  width: '500px',
+  backgroundColor: '#283618',
+  borderRadius: '12px',
+  margin: '5rem auto',  // This centers horizontally by setting left & right margins to auto
+};
+
+
+const noItemsTextStyle = {
+  color: 'white',
+  fontSize: '1.2rem',
+  fontWeight: 'bold',
+  textAlign: 'center',
 };

@@ -17,7 +17,7 @@ export default function Home({ items, onDelete, onWishlist }) {
 
       <input
         type="text"
-        placeholder="Search items..."
+        placeholder="Search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{
@@ -27,6 +27,8 @@ export default function Home({ items, onDelete, onWishlist }) {
           borderRadius: '10px',
           border: '1px solid #ccc',
           borderColor: "#283618",
+          height: '1.3rem',
+          fontSize: '1rem',
         }}
       />
 

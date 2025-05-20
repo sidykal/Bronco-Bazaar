@@ -33,7 +33,7 @@ const navStyle = {
 const logoTextStyle = {
   color: 'white',
   fontWeight: 'bold',
-  fontSize: '1.2rem',
+  fontSize: '1.5rem',
 };
 
 const linkStyle = {
