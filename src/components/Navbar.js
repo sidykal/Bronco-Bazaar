@@ -13,7 +13,7 @@ export default function Navbar() {
         <Link to="/home" style={linkStyle}>Home</Link>
         <Link to="/create" style={linkStyle}>Create Offer</Link>
         <Link to="/message" style={linkStyle}>Messages</Link>
-        <Link to="/message" style={linkStyle}>Wishlist</Link>
+        <Link to="/wishlist" style={linkStyle}>Wishlist</Link>
         <Link to="/profile" style={linkStyle}>Profile</Link>
       </div>
     </nav>

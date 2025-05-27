@@ -9,17 +9,53 @@ export default function Profile() {
   if (!user) return <p>You must be logged in to see this page.</p>;
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-      <h1>My Profile</h1>
-      <img 
-        src={user.photoURL} 
-        alt="Profile" 
-        style={{ borderRadius: '50%', width: '100px', height: '100px' }} 
-      />
-      <h2>{user.displayName}</h2>
-      <p>{user.email}</p>
-      <button onClick={() => signOut(auth)}>Sign Out</button>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '80vh',
+    }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '1rem',
+        width: '100%',
+        maxWidth: '400px',
+        padding: '2rem',
+        backgroundColor: '#283618',
+        borderRadius: '12px',
+        color: 'white',
+      }}>
+        <h2 style={{ textAlign: 'center' }}>My Profile</h2>
+
+        <img
+          src={user.photoURL}
+          alt="Profile"
+          style={{ borderRadius: '50%', width: '100px', height: '100px', objectFit: 'cover' }}
+        />
+
+        <h3 style={{ marginBottom: '0.25rem' }}>{user.displayName}</h3>
+        <p style={{ marginTop: '0' }}>{user.email}</p>
+
+        <button
+          onClick={() => signOut(auth)}
+          style={{
+            padding: '0.75rem 1.5rem',
+            border: 'none',
+            borderRadius: '999px',
+            backgroundColor: '#606c38',
+            color: 'white',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s'
+          }}
+          onMouseOver={(e) => (e.target.style.backgroundColor = '#8d9e54')}
+          onMouseOut={(e) => (e.target.style.backgroundColor = '#606c38')}
+        >
+          Sign Out
+        </button>
+      </div>
     </div>
-    
   );
 }

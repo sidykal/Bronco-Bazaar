@@ -27,15 +27,25 @@ export default function Wishlist({ wishlist, onRemove }) {
 
 // Styles for the list items and remove button
 const itemStyle = {
-  background: '#edebe7',
+  /*background: '#edebe7',
   border: '1px solid black',
   borderRadius: '8px',
   padding: '1rem',
+  marginBottom: '1rem',*/
+  background: '#283618',
+  borderRadius: '8px',
+  padding: '1rem',
   marginBottom: '1rem',
+  color: 'white',
+  breakInside: 'avoid',
+  wordWrap: 'break-word',       
+  overflowWrap: 'break-word',   
+  maxWidth: '100%',             
+  boxSizing: 'border-box',
 };
 
 const removeStyle = {
-  background: '#ff6347',
+  background: '#bc6c25',
   color: 'white',
   border: 'none',
   padding: '0.5rem 1rem',
@@ -45,6 +55,9 @@ const removeStyle = {
 };
 
 const listStyle = {
-    padding: 0,
-    listStyleType: 'none',
+    /*padding: 0,
+    listStyleType: 'none',*/
+    columnCount: 3,
+    columnGap: '1rem',
+    padding: '1rem',
   };
