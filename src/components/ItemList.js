@@ -4,7 +4,7 @@ export default function ItemList({ items, onDelete, onWishlist }) {
   // Track wishlist status for each item
   const [wishlistStatus, setWishlistStatus] = useState(
     items.reduce((status, item) => {
-      status[item.name] = false; // Default to not in wishlist
+      status[item.name] = false;
       return status;
     }, {})
   );
@@ -12,17 +12,34 @@ export default function ItemList({ items, onDelete, onWishlist }) {
   const handleWishlistClick = (item) => {
     const updatedStatus = { ...wishlistStatus, [item.name]: !wishlistStatus[item.name] };
     setWishlistStatus(updatedStatus);
-    onWishlist(item); // Call onWishlist to add to global wishlist
+    onWishlist(item);
   };
 
-  if (items.length === 0) return <p>There are no offers at this time.</p>;
+  if (items.length === 0)
+  return (
+    <div style={noItemsContainerStyle}>
+      <p style={noItemsTextStyle}>There are no offers at this time.</p>
+    </div>
+  );
+
 
   return (
     <ul style={listStyle}>
       {items.map((item, index) => (
         <li key={index} style={itemStyle}>
+          
+          {typeof item.image === 'string' && item.image.trim() !== '' && (
+            <img
+              src={item.image}
+              alt=""
+              style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '0.5rem' }}
+            />
+          )}
+
+
           <strong>{item.name}</strong> – ${item.price}
           <p style={descriptionStyle}>{item.description}</p>
+          
           <button onClick={() => onDelete(index)} style={deleteStyle}>
             Delete
           </button>
@@ -42,24 +59,31 @@ export default function ItemList({ items, onDelete, onWishlist }) {
 }
 
 const listStyle = {
-  padding: 0,
-  listStyleType: 'none',
+  columnCount: 3,
+  columnGap: '1rem',
+  padding: '1rem',
 };
 
 const itemStyle = {
-  background: '#edebe7',
-  border: '1px solid black',
+  background: '#283618',
   borderRadius: '8px',
   padding: '1rem',
   marginBottom: '1rem',
+  color: 'white',
+  breakInside: 'avoid',
+  wordWrap: 'break-word',       
+  overflowWrap: 'break-word',   
+  maxWidth: '100%',             
+  boxSizing: 'border-box',
 };
 
 const descriptionStyle = {
   margin: '0.5rem 0',
+  color: 'white',
 };
 
 const deleteStyle = {
-  background: 'red',
+  background: '#bc6c25',
   color: 'white',
   border: 'none',
   padding: '0.5rem 1rem',
@@ -69,7 +93,7 @@ const deleteStyle = {
 };
 
 const offerStyle = {
-  background: 'green',
+  background: '#606c38',
   color: 'white',
   border: 'none',
   padding: '0.5rem 1rem',
@@ -77,11 +101,30 @@ const offerStyle = {
 };
 
 const wishlistButtonStyle = {
-  background: '#f0ad4e',
+  background: '#dda15e',
   color: 'white',
   border: 'none',
   padding: '0.5rem 1rem',
   borderRadius: '4px',
   cursor: 'pointer',
   margin: '0.25rem',
+};
+
+const noItemsContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '80px',
+  width: '500px',
+  backgroundColor: '#283618',
+  borderRadius: '12px',
+  margin: '5rem auto', 
+};
+
+
+const noItemsTextStyle = {
+  color: 'white',
+  fontSize: '1.2rem',
+  fontWeight: 'bold',
+  textAlign: 'center',
 };
