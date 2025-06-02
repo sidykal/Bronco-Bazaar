@@ -27,6 +27,14 @@ export default function ItemList({ items, onDelete, onWishlist }) {
     <ul style={listStyle}>
       {items.map((item, index) => (
         <li key={index} style={itemStyle}>
+            {typeof item.image === 'string' && item.image.trim() !== '' && (
+            <img
+              src={item.image}
+              alt=""
+              style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '0.5rem' }}
+            />
+          )}
+
           <strong>{item.name}</strong> – ${item.price}
           <p style={descriptionStyle}>{item.description}</p>
           
@@ -49,13 +57,6 @@ export default function ItemList({ items, onDelete, onWishlist }) {
 }
 
 const listStyle = {
-  /*padding: 0,
-  listStyleType: 'none',
-  //3 per row
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',  // 3 equal columns
-  gap: '1rem',                            // space between items
-  */
   columnCount: 3,
   columnGap: '1rem',
   padding: '1rem',

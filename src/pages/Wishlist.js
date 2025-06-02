@@ -11,11 +11,21 @@ export default function Wishlist({ wishlist, onRemove }) {
         <ul style={listStyle}>
           {wishlist.map((item, index) => (
             <li key={index} style={itemStyle}>
+              {typeof item.image === 'string' && item.image.trim() !== '' && (
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '0.5rem' }}
+                />
+              )}
               <strong>{item.name}</strong> – ${item.price}
               <p>{item.description}</p>
               {/* Remove from wishlist button */}
               <button onClick={() => onRemove(item)} style={removeStyle}>
                 Remove from Wishlist
+              </button>
+              <button style={offerStyle}>
+                Make Offer
               </button>
             </li>
           ))}
@@ -25,13 +35,7 @@ export default function Wishlist({ wishlist, onRemove }) {
   );
 }
 
-// Styles for the list items and remove button
 const itemStyle = {
-  /*background: '#edebe7',
-  border: '1px solid black',
-  borderRadius: '8px',
-  padding: '1rem',
-  marginBottom: '1rem',*/
   background: '#283618',
   borderRadius: '8px',
   padding: '1rem',
@@ -54,9 +58,16 @@ const removeStyle = {
   marginTop: '0.5rem',
 };
 
+const offerStyle = {
+  //background: 'green',
+  background: '#606c38',
+  color: 'white',
+  border: 'none',
+  padding: '0.5rem 1rem',
+  borderRadius: '4px',
+}
+
 const listStyle = {
-    /*padding: 0,
-    listStyleType: 'none',*/
     columnCount: 3,
     columnGap: '1rem',
     padding: '1rem',

@@ -4,23 +4,23 @@ export default function ItemForm({ onAdd }) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !price) return;
+    const image = imageFile ? URL.createObjectURL(imageFile) : null;
     onAdd({ name, price, description, image });
     setName('');
     setPrice('');
     setDescription('');
-    setImage(null);
-    e.target.reset();
+    setImageFile(null);
 
   };
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);  // store the first selected file
+      setImageFile(e.target.files[0]);
     }
   };
 
@@ -84,6 +84,14 @@ export default function ItemForm({ onAdd }) {
           onChange={handleImageChange}
           style={{ color: 'white' }}
         />
+
+        {imageFile && (
+          <img
+            src={URL.createObjectURL(imageFile)}
+            alt="Preview"
+            style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '0.5rem' }}
+          />
+        )}
 
 
         <button
