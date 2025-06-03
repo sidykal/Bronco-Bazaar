@@ -8,6 +8,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLUo0Vm-Hc1kA3E1_Oku2pL5GKyY2VeOA",
@@ -47,3 +48,4 @@ export function onAuthStateChange(callback) {
 
 // Firestore export
 export const db = getFirestore(app);
+export const storage = getStorage(app);

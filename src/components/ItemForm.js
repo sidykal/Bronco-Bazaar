@@ -1,6 +1,8 @@
 // src/components/ItemForm.js
 
 import React, { useState } from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase";  // import your storage instance
 
 export default function ItemForm({ onAdd }) {
   const [name, setName] = useState("");
@@ -8,18 +10,35 @@ export default function ItemForm({ onAdd }) {
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !price) return;
 
-    const image = imageFile ? URL.createObjectURL(imageFile) : null;
+    let imageUrl = null;
+
+    if (imageFile) {
+      // Create a storage ref with a unique filename (you can customize naming)
+      const imageRef = ref(storage, `images/${Date.now()}_${imageFile.name}`);
+  
+      try {
+        // Upload the file to Firebase Storage
+        await uploadBytes(imageRef, imageFile);
+  
+        // Get the public URL of the uploaded image
+        imageUrl = await getDownloadURL(imageRef);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image. Please try again.");
+        return;
+      }
+    }
 
     // Parse price as a number before sending to Firestore
     onAdd({
       name: name.trim(),
       price: parseFloat(price),
       description: description.trim(),
-      image,
+      image: imageUrl,
     });
 
     // Clear form fields
