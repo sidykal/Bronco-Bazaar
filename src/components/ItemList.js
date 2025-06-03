@@ -56,9 +56,11 @@ export default function ItemList({ items, onDelete, onWishlist, onOffer }) {
             <p style={descriptionStyle}>{item.description}</p>
 
             {/* Delete now passes item.id */}
-            <button onClick={() => onDelete(item.id)} style={deleteStyle}>
-              Delete
-            </button>
+            {isOwnPost && (
+              <button onClick={() => onDelete(item.id)} style={deleteStyle}>
+                Delete
+              </button>
+            )}
 
             {/* “Make Offer”: disabled on your own posts */}
             <button
