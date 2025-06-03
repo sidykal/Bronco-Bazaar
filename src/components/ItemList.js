@@ -57,10 +57,10 @@ export default function ItemList({ items, onDelete, onWishlist, onOffer }) {
 
             {/* Delete now passes item.id */}
             {isOwnPost && (
-              <button onClick={() => onDelete(item.id)} style={deleteStyle}>
-                Delete
-              </button>
-            )}
+            <button onClick={() => onDelete(item.id)} style={deleteStyle}>
+              Delete
+            </button>
+          )}
 
             {/* “Make Offer”: disabled on your own posts */}
             <button
@@ -75,6 +75,7 @@ export default function ItemList({ items, onDelete, onWishlist, onOffer }) {
               {isOwnPost ? "Your Post" : "Make Offer"}
             </button>
 
+            {!isOwnPost && (
             <button
               onClick={() => handleWishlistClick(item)}
               style={
@@ -85,6 +86,7 @@ export default function ItemList({ items, onDelete, onWishlist, onOffer }) {
             >
               {wishlistStatus[item.id] ? "Wishlisted!" : "Add to Wishlist"}
             </button>
+          )}
           </li>
         );
       })}
