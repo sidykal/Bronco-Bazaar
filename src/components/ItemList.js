@@ -1,12 +1,13 @@
 // src/components/ItemList.js
 
 import React, { useState, useEffect } from "react";
+import { auth } from "../firebase";
 
-export default function ItemList({ items, onDelete, onWishlist }) {
-  // Track wishlist status for each item by its Firestore document ID
+export default function ItemList({ items, onDelete, onWishlist, onOffer }) {
+  // Track wishlist status by Firestore document ID
   const [wishlistStatus, setWishlistStatus] = useState({});
+  const currentUser = auth.currentUser;
 
-  // Whenever the `items` array changes, initialize wishlistStatus for new items
   useEffect(() => {
     const initialStatus = {};
     items.forEach((item) => {
@@ -16,12 +17,10 @@ export default function ItemList({ items, onDelete, onWishlist }) {
   }, [items]);
 
   const handleWishlistClick = (item) => {
-    // Toggle status for this item ID
     setWishlistStatus((prev) => ({
       ...prev,
       [item.id]: !prev[item.id],
     }));
-    // Inform parent (App.js) to add this item to Firestore wishlist
     onWishlist(item);
   };
 
@@ -35,43 +34,58 @@ export default function ItemList({ items, onDelete, onWishlist }) {
 
   return (
     <ul style={listStyle}>
-      {items.map((item) => (
-        <li key={item.id} style={itemStyle}>
-          {typeof item.image === "string" && item.image.trim() !== "" && (
-            <img
-              src={item.image}
-              alt=""
-              style={{
-                width: "100%",
-                height: "auto",
-                borderRadius: "8px",
-                marginBottom: "0.5rem",
-              }}
-            />
-          )}
+      {items.map((item) => {
+        const isOwnPost = currentUser && item.ownerUid === currentUser.uid;
 
-          <strong>{item.name}</strong> – ${item.price}
-          <p style={descriptionStyle}>{item.description}</p>
+        return (
+          <li key={item.id} style={itemStyle}>
+            {typeof item.image === "string" && item.image.trim() !== "" && (
+              <img
+                src={item.image}
+                alt=""
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: "8px",
+                  marginBottom: "0.5rem",
+                }}
+              />
+            )}
 
-          {/* Delete now passes item.id */}
-          <button onClick={() => onDelete(item.id)} style={deleteStyle}>
-            Delete
-          </button>
+            <strong>{item.name}</strong> – ${item.price}
+            <p style={descriptionStyle}>{item.description}</p>
 
-          <button style={offerStyle}>Make Offer</button>
+            {/* Delete now passes item.id */}
+            <button onClick={() => onDelete(item.id)} style={deleteStyle}>
+              Delete
+            </button>
 
-          <button
-            onClick={() => handleWishlistClick(item)}
-            style={
-              wishlistStatus[item.id]
-                ? { ...wishlistButtonStyle, backgroundColor: "#4CAF50" }
-                : wishlistButtonStyle
-            }
-          >
-            {wishlistStatus[item.id] ? "Wishlisted!" : "Add to Wishlist"}
-          </button>
-        </li>
-      ))}
+            {/* “Make Offer”: disabled on your own posts */}
+            <button
+              onClick={() => onOffer(item)}
+              style={
+                isOwnPost
+                  ? { ...offerStyle, opacity: 0.5, cursor: "not-allowed" }
+                  : offerStyle
+              }
+              disabled={isOwnPost}
+            >
+              {isOwnPost ? "Your Post" : "Make Offer"}
+            </button>
+
+            <button
+              onClick={() => handleWishlistClick(item)}
+              style={
+                wishlistStatus[item.id]
+                  ? { ...wishlistButtonStyle, backgroundColor: "#4CAF50" }
+                  : wishlistButtonStyle
+              }
+            >
+              {wishlistStatus[item.id] ? "Wishlisted!" : "Add to Wishlist"}
+            </button>
+          </li>
+        );
+      })}
     </ul>
   );
 }
