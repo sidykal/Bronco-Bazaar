@@ -3,6 +3,7 @@ import { auth, provider } from "../firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
+
 function Login() {
   const navigate = useNavigate();
 
