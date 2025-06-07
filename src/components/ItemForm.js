@@ -2,38 +2,42 @@
 
 import React, { useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebase";  // import your storage instance
+import { storage } from "../firebase"; // Firebase storage instance
 
 export default function ItemForm({ onAdd }) {
+  // Local state for form fields and uploaded image file
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
+  // Handles form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!name || !price) return;
+    e.preventDefault(); // Prevent page reload on form submit
+    if (!name || !price) return; // Basic validation check
 
     let imageUrl = null;
 
+    // If an image is selected, upload to Firebase Storage
     if (imageFile) {
-      // Create a storage ref with a unique filename (you can customize naming)
+      // Create a storage reference with a unique filename
       const imageRef = ref(storage, `images/${Date.now()}_${imageFile.name}`);
   
       try {
-        // Upload the file to Firebase Storage
+        // Upload image file to Firebase Storage
         await uploadBytes(imageRef, imageFile);
   
-        // Get the public URL of the uploaded image
+        // Retrieve the public URL for the uploaded image
         imageUrl = await getDownloadURL(imageRef);
       } catch (error) {
+        // Handle upload errors
         console.error("Error uploading image:", error);
         alert("Failed to upload image. Please try again.");
         return;
       }
     }
 
-    // Parse price as a number before sending to Firestore
+    // Pass form data to parent component with trimmed/parsed values
     onAdd({
       name: name.trim(),
       price: parseFloat(price),
@@ -41,15 +45,16 @@ export default function ItemForm({ onAdd }) {
       image: imageUrl,
     });
 
-    // Clear form fields
+    // Clear form fields after submission
     setName("");
     setPrice("");
     setDescription("");
     setImageFile(null);
   };
 
+  // Handle image file input change
   const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]; // Get selected file
     if (file) {
       setImageFile(file);
     }
@@ -64,6 +69,7 @@ export default function ItemForm({ onAdd }) {
         height: "80vh",
       }}
     >
+      {/* Main form UI for creating a new offer */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -127,6 +133,7 @@ export default function ItemForm({ onAdd }) {
           style={{ color: "white" }}
         />
 
+        {/* Image preview shown after selection */}
         {imageFile && (
           <img
             src={URL.createObjectURL(imageFile)}
@@ -140,6 +147,7 @@ export default function ItemForm({ onAdd }) {
           />
         )}
 
+        {/* Submit button with hover effects */}
         <button
           type="submit"
           style={{

@@ -1,17 +1,27 @@
 // src/pages/Wishlist.js
+
 import React from "react";
 
+/**
+ * Wishlist page component that displays all items saved by the user.
+ * Allows the user to remove items from the wishlist or initiate an offer.
+ *
+ * @param {Object[]} wishlist - Array of wishlist item objects
+ * @param {function} onRemove - Function to call when an item is removed from the wishlist
+ */
 export default function Wishlist({ wishlist, onRemove }) {
   return (
     <div>
       <h2>Your Wishlist</h2>
 
+      {/* Conditional rendering: show message if wishlist is empty */}
       {wishlist.length === 0 ? (
         <p>No items in your wishlist.</p>
       ) : (
         <ul style={listStyle}>
           {wishlist.map((item) => (
             <li key={item.id} style={itemStyle}>
+              {/* Display item image if present and valid */}
               {typeof item.image === "string" && item.image.trim() !== "" && (
                 <img
                   src={item.image}
@@ -24,10 +34,12 @@ export default function Wishlist({ wishlist, onRemove }) {
                   }}
                 />
               )}
+
+              {/* Item title and price */}
               <strong>{item.name}</strong> – ${item.price}
               <p>{item.description}</p>
 
-              {/* Remove from wishlist button now passes item.id */}
+              {/* Remove item from wishlist */}
               <button
                 onClick={() => onRemove(item.id)}
                 style={removeStyle}
@@ -35,6 +47,7 @@ export default function Wishlist({ wishlist, onRemove }) {
                 Remove from Wishlist
               </button>
 
+              {/* Placeholder for making an offer */}
               <button style={offerStyle}>Make Offer</button>
             </li>
           ))}
@@ -44,6 +57,11 @@ export default function Wishlist({ wishlist, onRemove }) {
   );
 }
 
+// --------------------------
+// Inline CSS styling objects
+// --------------------------
+
+// Style for each wishlist item card
 const itemStyle = {
   background: "#283618",
   borderRadius: "8px",
@@ -57,6 +75,7 @@ const itemStyle = {
   boxSizing: "border-box",
 };
 
+// Style for the "Remove from Wishlist" button
 const removeStyle = {
   background: "#bc6c25",
   color: "white",
@@ -67,6 +86,7 @@ const removeStyle = {
   marginTop: "0.5rem",
 };
 
+// Style for the "Make Offer" button
 const offerStyle = {
   background: "#606c38",
   color: "white",
@@ -77,6 +97,7 @@ const offerStyle = {
   marginTop: "0.5rem",
 };
 
+// CSS for arranging items into columns
 const listStyle = {
   columnCount: 3,
   columnGap: "1rem",

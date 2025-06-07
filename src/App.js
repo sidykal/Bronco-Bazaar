@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
+// Firebase imports
 import { onAuthStateChange, auth, db } from "./firebase";
 import {
   doc,
@@ -10,12 +12,13 @@ import {
   collection,
   addDoc,
   deleteDoc,
-  onSnapshot,      
-  query,           
+  onSnapshot,
+  query,
   orderBy,
-  getDocs         
+  getDocs
 } from "firebase/firestore";
 
+// Component imports
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Create from "./pages/Create";
@@ -25,24 +28,28 @@ import Login from "./pages/Login";
 import Wishlist from "./pages/Wishlist";
 
 function App() {
-  // “listings” holds all public offers (real-time)
+  // State to hold all public listings (live updates via Firestore onSnapshot)
   const [listings, setListings] = useState([]);
+
+  // User's wishlist, loaded once on login
   const [wishlist, setWishlist] = useState([]);
 
-  // Auth and loading states
+  // Authentication and loading state flags
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [loadingData, setLoadingData] = useState(false);
 
-  // Keep a reference to the unsubscribe function for listings listener
+  // Listener unsubscribe function for real-time listing updates
   let listingsUnsubscribe = null;
 
-  // 1) Listen for Firebase Auth state, create /users/{uid} if needed,
-  //    then set up real-time listener for public listings and fetch wishlist
+  // -------------------------------
+  // 1. Authentication and Firestore sync
+  // -------------------------------
   useEffect(() => {
+    // Set up listener for auth state change
     const unsubscribeAuth = onAuthStateChange(async (currentUser) => {
       if (currentUser) {
-        // Ensure the user's profile document exists
+        // Ensure user document exists in /users/{uid}
         const userRef = doc(db, "users", currentUser.uid);
         const snap = await getDoc(userRef);
         if (!snap.exists()) {
@@ -56,15 +63,12 @@ function App() {
 
         setUser(currentUser);
 
-        // 2a) Fetch this user's wishlist once
+        // Fetch wishlist once
         setLoadingData(true);
         await fetchWishlist(currentUser.uid);
 
-        // 2b) Set up real-time listener for all public listings
+        // Set up real-time listener for /listings
         const listingsRef = collection(db, "listings");
-        // (Optional) you could order by createdAt: 
-        // const q = query(listingsRef, orderBy("createdAt", "desc"));
-        // But here we’ll listen to the collection as-is:
         listingsUnsubscribe = onSnapshot(
           listingsRef,
           (snapshot) => {
@@ -81,7 +85,7 @@ function App() {
           }
         );
       } else {
-        // No user signed in → clear state & tear down listener
+        // If user signs out, reset state and unsubscribe from listings
         setUser(null);
         setWishlist([]);
         setListings([]);
@@ -93,13 +97,16 @@ function App() {
       setLoadingAuth(false);
     });
 
+    // Cleanup on unmount
     return () => {
       unsubscribeAuth();
       if (listingsUnsubscribe) listingsUnsubscribe();
     };
   }, []);
 
-  // 2a) Fetch wishlist under /users/{uid}/wishlist (one-time)
+  // -------------------------------
+  // 2a. Fetch wishlist once on login
+  // -------------------------------
   const fetchWishlist = async (uid) => {
     try {
       const wishlistRef = collection(db, "users", uid, "wishlist");
@@ -114,7 +121,9 @@ function App() {
     }
   };
 
-  // 3) Create a new public listing
+  // -------------------------------
+  // 3. Add item to public listings
+  // -------------------------------
   const addItem = async (itemData) => {
     if (!user) return;
     try {
@@ -125,13 +134,15 @@ function App() {
         ...itemData,
         createdAt: new Date(),
       });
-      // Because we have onSnapshot listening, setListings will be updated automatically.
+      // Listings state is updated automatically via onSnapshot
     } catch (err) {
       console.error("Error adding public listing:", err);
     }
   };
 
-  // 4) Delete a public listing (only if the current user is the owner)
+  // -------------------------------
+  // 4. Delete a public listing (if user is the owner)
+  // -------------------------------
   const deleteItem = async (listingId) => {
     if (!user) return;
     try {
@@ -139,7 +150,7 @@ function App() {
       const snap = await getDoc(listDocRef);
       if (snap.exists() && snap.data().ownerUid === user.uid) {
         await deleteDoc(listDocRef);
-        // onSnapshot listener will automatically remove it from state
+        // onSnapshot will auto-update state
       } else {
         console.warn("Cannot delete listing: not owner or does not exist.");
       }
@@ -148,10 +159,12 @@ function App() {
     }
   };
 
-  // 5) Add an item to the user's wishlist under /users/{uid}/wishlist
+  // -------------------------------
+  // 5. Add item to user's wishlist
+  // -------------------------------
   const addToWishlist = async (itemData) => {
     if (!user) return;
-    if (wishlist.some((w) => w.id === itemData.id)) return;
+    if (wishlist.some((w) => w.id === itemData.id)) return; // Prevent duplicates
     try {
       const wishlistRef = collection(db, "users", user.uid, "wishlist");
       const docRef = await addDoc(wishlistRef, {
@@ -167,7 +180,9 @@ function App() {
     }
   };
 
-  // 6) Remove an item from the user's wishlist
+  // -------------------------------
+  // 6. Remove item from wishlist
+  // -------------------------------
   const removeFromWishlist = async (wishId) => {
     if (!user) return;
     try {
@@ -179,19 +194,25 @@ function App() {
     }
   };
 
-  // Show a loading screen until auth + data have loaded
+  // -------------------------------
+  // 7. UI: Show loading screen while auth/data loads
+  // -------------------------------
   if (loadingAuth || loadingData) {
     return <div>Loading...</div>;
   }
 
+  // -------------------------------
+  // 8. Routing logic and protected pages
+  // -------------------------------
   return (
     <Router>
       <Navbar user={user} />
       <div style={{ padding: "2rem" }}>
         <Routes>
-          {/* If user is signed in, redirect “/” → “/home”; otherwise render Login */}
+          {/* Root route: show login if not signed in, else redirect to home */}
           <Route path="/" element={user ? <Navigate to="/home" /> : <Login />} />
 
+          {/* Home page: show all listings, allow delete and wishlist */}
           <Route
             path="/home"
             element={
@@ -207,21 +228,25 @@ function App() {
             }
           />
 
+          {/* Create listing page */}
           <Route
             path="/create"
             element={user ? <Create onAdd={addItem} /> : <Navigate to="/" />}
           />
 
+          {/* Messages page */}
           <Route
             path="/message"
             element={user ? <Message /> : <Navigate to="/" />}
           />
 
+          {/* Profile page */}
           <Route
             path="/profile"
             element={user ? <Profile /> : <Navigate to="/" />}
           />
 
+          {/* Wishlist page */}
           <Route
             path="/wishlist"
             element={

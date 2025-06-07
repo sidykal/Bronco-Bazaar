@@ -2,49 +2,56 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ItemList from "../components/ItemList";
+import ItemList from "../components/ItemList"; // Reusable component to display list of items
 
 export default function Home({ items, onDelete, onWishlist, onOffer }) {
+  // State for search input and filter options
   const [searchTerm, setSearchTerm] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOrder, setSortOrder] = useState("default");
-  const navigate = useNavigate();
 
-  // Filter & sort logic remains the same
+  const navigate = useNavigate(); // React Router hook for navigation
+
+  // Filters and sorts the list of items based on user inputs
   const filteredItems = items
     .filter((item) => {
+      // Search filtering: name, description, or price matches the search term
       const matchesSearch =
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.price.toString().includes(searchTerm);
 
+      // Parse string inputs into numbers for price filtering
       const price = parseFloat(item.price);
       const min = parseFloat(minPrice);
       const max = parseFloat(maxPrice);
 
+      // Check if price is within user-specified range (if set)
       const inRange =
         (!minPrice || price >= min) && (!maxPrice || price <= max);
 
       return matchesSearch && inRange;
     })
     .sort((a, b) => {
+      // Apply sort order based on user selection
       if (sortOrder === "asc") return a.price - b.price;
       if (sortOrder === "desc") return b.price - a.price;
-      return 0;
+      return 0; // Default: no sorting
     });
 
-  // Navigate to /message with the owner’s UID when “Make Offer” is clicked
+  // Navigates to the messaging page, passing the item's owner UID
   const handleMakeOffer = (item) => {
     if (!item.ownerUid) {
-      console.warn("No ownerUid on this item:", item);
+      console.warn("No ownerUid on this item:", item); // Failsafe for missing data
       return;
     }
-    navigate("/message", { state: { selectedUid: item.ownerUid } });
+    navigate("/message", { state: { selectedUid: item.ownerUid } }); // Pass UID via location state
   };
 
   return (
     <div>
+      {/* Filter + Sort Inputs */}
       <div
         style={{
           marginBottom: "1rem",
@@ -54,6 +61,7 @@ export default function Home({ items, onDelete, onWishlist, onOffer }) {
           alignItems: "center",
         }}
       >
+        {/* Search bar for name, description, or price */}
         <input
           type="text"
           placeholder="Search"
@@ -71,6 +79,7 @@ export default function Home({ items, onDelete, onWishlist, onOffer }) {
           }}
         />
 
+        {/* Minimum price input */}
         <input
           type="number"
           placeholder="Min Price"
@@ -84,6 +93,7 @@ export default function Home({ items, onDelete, onWishlist, onOffer }) {
           }}
         />
 
+        {/* Maximum price input */}
         <input
           type="number"
           placeholder="Max Price"
@@ -97,6 +107,7 @@ export default function Home({ items, onDelete, onWishlist, onOffer }) {
           }}
         />
 
+        {/* Dropdown to select sort order */}
         <select
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
@@ -113,11 +124,12 @@ export default function Home({ items, onDelete, onWishlist, onOffer }) {
         </select>
       </div>
 
+      {/* Renders the filtered and sorted item list */}
       <ItemList
         items={filteredItems}
         onDelete={onDelete}
         onWishlist={onWishlist}
-        onOffer={handleMakeOffer}
+        onOffer={handleMakeOffer} // Pass custom offer handler
       />
     </div>
   );
